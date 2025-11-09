@@ -4,14 +4,14 @@ import json
 import os
 from pathlib import Path
 
-# === Paths ===
+# paths
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 songs_folder = str(BASE_DIR / "data" / "songs")
 fingerprint_file = str(BASE_DIR / "data" / "fingerprints" / "db.json")
 test_path = str(BASE_DIR / "data" / "songs" / "Kanye West - Can't Tell Me Nothing.mp3")
 os.makedirs(os.path.dirname(fingerprint_file), exist_ok=True)
 
-# === Step 1: Build fingerprint database ===
+# fingerprint database
 print("Building fingerprint database...")
 build_fingerprint_database(songs_folder, fingerprint_file)
 
