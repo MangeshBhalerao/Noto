@@ -22,37 +22,45 @@ async def recognize_audio(file: UploadFile = File(...)):
     """
     Main feature: Recognize a song from audio recording
     
-    User sends: 10-second audio clip (WAV/MP3)
+    User sends: 10-second audio clip (WAV format from browser)
     We return: Matched song + confidence
     """
     
+    temp_file_path = None
+    
     try:
-        # 1. Save uploaded file temporarily
+        # 1. Save uploaded WAV file temporarily
         temp_file_path = TEMP_DIR / f"recording_{file.filename}"
         
         with open(temp_file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         
         print(f"✅ Saved recording to: {temp_file_path}")
+        print(f"📊 File size: {temp_file_path.stat().st_size} bytes")
         
         # 2. Match against database
-        print("🔍 Matching audio...")
+        print("🔍 Matching audio against database...")
         matched_song, matches, confidence = match_song(
             str(PEAK_DB_FILE),
             str(temp_file_path)
         )
         
-        # 3. Clean up temp file
-        temp_file_path.unlink()
+        # 3. Clean up temp file (commented for debugging)
+        # if temp_file_path and temp_file_path.exists():
+        #     temp_file_path.unlink()
+        #     print("🗑️ Cleaned up temp file")
+        print(f"💾 Recording saved at: {temp_file_path}")
         
         # 4. Check if match found
-        if matched_song and matches > 20:  # Need at least 20 matches
+        if matched_song and matches > 20:  # Need at least 20 aligned matches
             # Extract song info from filename
             song_info = SongResponse(
                 title=matched_song.replace(".mp3", "").replace(".wav", ""),
-                artist="Unknown",  # You can parse from filename
+                artist="Unknown",
                 file_name=matched_song
             )
+            
+            print(f"✅ Match found: {matched_song} ({confidence:.1f}% confidence)")
             
             return RecognitionResponse(
                 matched=True,
@@ -63,15 +71,24 @@ async def recognize_audio(file: UploadFile = File(...)):
             )
         else:
             # No match
+            print(f"❌ No match found (aligned matches: {matches})")
             return RecognitionResponse(
                 matched=False,
                 song=None,
                 confidence=0.0,
                 aligned_matches=matches if matched_song else 0,
-                message="No match found. Song not in database."
+                message="Unable to recognize. Song not in database or audio quality too low."
             )
             
     except Exception as e:
+        # Clean up on error
+        if temp_file_path and temp_file_path.exists():
+            temp_file_path.unlink()
+            
+        print(f"❌ Error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        
         raise HTTPException(
             status_code=500,
             detail=f"Recognition failed: {str(e)}"
