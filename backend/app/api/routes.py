@@ -73,7 +73,7 @@ async def recognize_audio(file: UploadFile = File(...)):
         print(f"💾 Recording saved at: {temp_file_path}")
         
         # 4. Check if match found
-        if matched_song and matches > 20:  # Need at least 20 aligned matches
+        if matched_song and matches >= 15:  # Need at least 15 aligned matches (lowered threshold)
             # Get song info from database if using Postgres
             if USE_POSTGRES:
                 song_data = get_song_by_title(matched_song)

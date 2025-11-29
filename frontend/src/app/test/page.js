@@ -9,7 +9,7 @@ export default function TestPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(12);
   const audioContextRef = useRef(null);
   const audioChunksRef = useRef([]);
   const timerRef = useRef(null);
@@ -21,7 +21,7 @@ export default function TestPage() {
       setError(null);
       setResult(null);
       setIsAnalyzing(false);
-      setCountdown(10);
+      setCountdown(12);
       
       // Request microphone permission
       const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -58,8 +58,8 @@ export default function TestPage() {
       setIsRecording(true);
       console.log('Recording started (WAV format)...');
       
-      // Countdown timer (10 seconds)
-      let timeLeft = 10;
+      // Countdown timer (12 seconds for better accuracy)
+      let timeLeft = 12;
       timerRef.current = setInterval(() => {
         timeLeft--;
         setCountdown(timeLeft);
@@ -330,7 +330,7 @@ export default function TestPage() {
                 maxWidth: '600px',
                 margin: '0 auto',
               }}>
-                Tap to record 10 seconds and discover what's playing
+                Tap to record 12 seconds and discover what's playing
               </p>
             </div>
 
@@ -603,7 +603,7 @@ export default function TestPage() {
               }}>
                 <li style={{ marginBottom: '0.5rem' }}>Click the button to start recording</li>
                 <li style={{ marginBottom: '0.5rem' }}>Allow microphone access when prompted</li>
-                <li style={{ marginBottom: '0.5rem' }}>Play a song or hum a melody (10 seconds)</li>
+                <li style={{ marginBottom: '0.5rem' }}>Play a song or hum a melody (12 seconds)</li>
                 <li>Wait for AI to identify the track</li>
               </ol>
             </div>

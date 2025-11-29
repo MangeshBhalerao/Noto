@@ -2,7 +2,7 @@ import os
 import json
 import psycopg2
 from psycopg2.extras import execute_batch
-from core.audio_processing import fingerprint_song
+from .core.audio_processing import fingerprint_song
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -68,30 +68,47 @@ def migrate_from_json(conn):
     with open(json_path, 'r') as f:
         peak_db = json.load(f)
     
+    # peak_db structure: {hash_string: [{song, offset}, {song, offset}]}
+    # We need to reorganize by song first
+    
+    print("🔄 Reorganizing data by song...")
+    songs_set = set()
+    
+    # Collect all unique songs
+    for entries in peak_db.values():
+        for entry in entries:
+            songs_set.add(entry['song'])
+    
+    print(f"📊 Found {len(songs_set)} unique songs")
+    
     with conn.cursor() as cur:
         # Insert songs
         song_map = {}  # {song_name: song_id}
         
-        for song_name in peak_db.keys():
+        for idx, song_name in enumerate(sorted(songs_set), 1):
+            # Clean song name (remove .mp3 extension for title)
+            clean_name = song_name.replace('.mp3', '').replace('.wav', '')
+            
             cur.execute("""
                 INSERT INTO songs (title, file_path)
                 VALUES (%s, %s)
                 RETURNING id;
-            """, (song_name, f"data/songs/{song_name}.mp3"))
+            """, (clean_name, f"data/songs/{song_name}"))
             
             song_id = cur.fetchone()[0]
             song_map[song_name] = song_id
-            print(f"✅ Inserted song: {song_name} (ID: {song_id})")
+            print(f"[{idx}/{len(songs_set)}] ✅ Inserted song: {clean_name} (ID: {song_id})")
         
         # Insert fingerprints in batches
         fingerprints_batch = []
         
-        for song_name, hashes in peak_db.items():
-            song_id = song_map[song_name]
-            
-            for hash_value, time_offsets in hashes.items():
-                for offset in time_offsets:
-                    fingerprints_batch.append((song_id, hash_value, offset))
+        for hash_string, entries in peak_db.items():
+            for entry in entries:
+                song_name = entry['song']
+                offset = entry['offset']
+                song_id = song_map[song_name]
+                
+                fingerprints_batch.append((song_id, hash_string, offset))
         
         print(f"📊 Inserting {len(fingerprints_batch):,} fingerprints...")
         

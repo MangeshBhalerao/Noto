@@ -9,12 +9,12 @@ import hashlib
 SAMPLE_RATE = 22050
 WINDOW_SIZE = 4096
 HOP_LENGTH = 512
-PEAK_NEIGHBORHOOD_SIZE = 20  # Size of local maximum filter
+PEAK_NEIGHBORHOOD_SIZE = 20  # Optimal for peak detection
 MIN_HASH_TIME_DELTA = 0
 MAX_HASH_TIME_DELTA = 200
-FINGERPRINT_REDUCTION = 15  # Keep top 15% of peaks (more fingerprints)
+FINGERPRINT_REDUCTION = 15  # Keep top 15% of peaks
 PEAK_SORT = True
-FAN_VALUE = 10  # Pair each peak with next 10 peaks (increased from 5)
+FAN_VALUE = 10  # Each peak pairs with next 10 peaks
 
 def extract_fingerprint(file_path: str):
     """Extract MFCC mean fingerprint from an audio file."""

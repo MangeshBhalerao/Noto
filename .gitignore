@@ -10,6 +10,7 @@ data/songs/
 data/temp/
 data/recordings/
 songs/
+songs_backup/
 
 # Database files (too large for GitHub)
 data/fingerprints/peak_db.json
