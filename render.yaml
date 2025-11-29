@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: noto-backend
+    env: python
+    runtime: python-3.11
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://noto-mangeshbhalerao.vercel.app,http://localhost:3000
