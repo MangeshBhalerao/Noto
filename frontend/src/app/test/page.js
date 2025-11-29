@@ -201,26 +201,7 @@ export default function TestPage() {
 
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#101d22] text-white">
-      {/* Header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between px-6 sm:px-10 py-4 border-b border-white/10 bg-white/5 backdrop-blur-md">
-        <div className="flex items-center gap-4">
-          <div className="w-6 h-6 text-[#36c3f2]">
-            <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-              <g clipPath="url(#clip0_6_330)">
-                <path clipRule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor" fillRule="evenodd"></path>
-              </g>
-              <defs>
-                <clipPath id="clip0_6_330"><rect fill="white" height="48" width="48"></rect></clipPath>
-              </defs>
-            </svg>
-          </div>
-          <h2 className="text-xl font-bold">Noto</h2>
-        </div>
-        <Link href="/" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
-          ← Home
-        </Link>
-      </header>
-
+      
       {/* Main Content */}
       <main className="flex flex-col items-center w-full px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         <div className="flex flex-col items-center w-full max-w-4xl gap-16">
@@ -231,9 +212,6 @@ export default function TestPage() {
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
                 The future of music recognition.
               </h1>
-              <p className="text-white/70 text-base sm:text-lg font-normal max-w-2xl">
-                Tap the scanner to identify any sound around you with the power of AI.
-              </p>
             </div>
 
             {/* Recording Button */}
@@ -247,9 +225,10 @@ export default function TestPage() {
               <button
                 onClick={isRecording ? stopRecording : startRecording}
                 disabled={isRecording || isAnalyzing}
-                className={`relative flex items-center justify-center rounded-full h-20 sm:h-24 px-8 bg-[#36c3f2] text-[#101d22] text-base sm:text-lg font-bold transition-all duration-300 transform ${
+                className={`hover:cursor-pointer relative flex items-center justify-center rounded-full h-20 sm:h-24 px-8 bg-[#36c3f2] text-[#101d22] text-base sm:text-lg font-bold transition-all duration-300 transform ${
                   (isRecording || isAnalyzing) ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:shadow-[0_0_15px_2px_rgba(54,195,242,0.5)]'
                 }`}
+                
               >
                 {isRecording ? `Recording... ${countdown}s` : isAnalyzing ? 'Analyzing...' : 'Tap to Identify'}
               </button>
@@ -314,20 +293,6 @@ export default function TestPage() {
               </div>
             </div>
           )}
-
-          {/* Instructions */}
-          {!isRecording && !result && (
-            <div className="flex flex-col gap-4 text-center max-w-md">
-              <h3 className="text-xl font-bold text-white">How it works:</h3>
-              <ol className="text-left text-white/70 space-y-2">
-                <li>1. Click "Tap to Identify" button</li>
-                <li>2. Allow microphone access when prompted</li>
-                <li>3. Play a song or hum a melody (10 seconds)</li>
-                <li>4. Wait for AI to identify the song</li>
-              </ol>
-            </div>
-          )}
-
         </div>
       </main>
     </div>
