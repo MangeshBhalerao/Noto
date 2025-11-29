@@ -1,16 +1,27 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from pathlib import Path
 import shutil
-from ..core.audio_processing import match_song
+import os
+from ..core.audio_processing import fingerprint_song
+from ..core.database import match_song_postgres, get_song_by_title
 from ..schemas.song import SongResponse, RecognitionResponse
 
 router = APIRouter()
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
-PEAK_DB_FILE = BASE_DIR / "data" / "fingerprints" / "peak_db.json"
 TEMP_DIR = BASE_DIR / "data" / "temp"
 TEMP_DIR.mkdir(parents=True, exist_ok=True)
+
+# Check if using Postgres or JSON fallback
+USE_POSTGRES = os.getenv("DATABASE_URL") is not None
+PEAK_DB_FILE = BASE_DIR / "data" / "fingerprints" / "peak_db.json"
+
+if USE_POSTGRES:
+    print("🐘 Using Postgres database")
+else:
+    print("📄 Using JSON database (fallback)")
+    from ..core.audio_processing import match_song
 
 @router.get("/test")
 async def test():
@@ -40,10 +51,20 @@ async def recognize_audio(file: UploadFile = File(...)):
         
         # 2. Match against database
         print("🔍 Matching audio against database...")
-        matched_song, matches, confidence = match_song(
-            str(PEAK_DB_FILE),
-            str(temp_file_path)
-        )
+        
+        if USE_POSTGRES:
+            # Extract fingerprints from sample
+            print("📊 Extracting fingerprint from sample...")
+            sample_hashes = fingerprint_song(str(temp_file_path))
+            
+            # Match using Postgres
+            matched_song, matches, confidence = match_song_postgres(sample_hashes)
+        else:
+            # Fallback to JSON
+            matched_song, matches, confidence = match_song(
+                str(PEAK_DB_FILE),
+                str(temp_file_path)
+            )
         
         # 3. Clean up temp file (commented for debugging)
         # if temp_file_path and temp_file_path.exists():
@@ -53,12 +74,21 @@ async def recognize_audio(file: UploadFile = File(...)):
         
         # 4. Check if match found
         if matched_song and matches > 20:  # Need at least 20 aligned matches
-            # Extract song info from filename
-            song_info = SongResponse(
-                title=matched_song.replace(".mp3", "").replace(".wav", ""),
-                artist="Unknown",
-                file_name=matched_song
-            )
+            # Get song info from database if using Postgres
+            if USE_POSTGRES:
+                song_data = get_song_by_title(matched_song)
+                song_info = SongResponse(
+                    title=song_data["title"] if song_data else matched_song,
+                    artist=song_data["artist"] if song_data else "Unknown",
+                    file_name=matched_song
+                )
+            else:
+                # Extract song info from filename (JSON fallback)
+                song_info = SongResponse(
+                    title=matched_song.replace(".mp3", "").replace(".wav", ""),
+                    artist="Unknown",
+                    file_name=matched_song
+                )
             
             print(f"✅ Match found: {matched_song} ({confidence:.1f}% confidence)")
             

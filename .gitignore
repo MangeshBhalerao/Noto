@@ -1,1 +1,62 @@
+# Audio files - NEVER commit copyrighted content
+*.mp3
+*.wav
+*.webm
+*.m4a
+*.flac
+
+# Data directories
+data/songs/
+data/temp/
+data/recordings/
+songs/
+
+# Database files (too large for GitHub)
+data/fingerprints/peak_db.json
+data/fingerprints/db.json
+*.json.bak
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
 venv/
+env/
+ENV/
+backend/venv/
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.example
+
+# Node.js
+node_modules/
+.next/
+.vercel/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+frontend/.next/
+frontend/node_modules/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+DEPLOYMENT.md
