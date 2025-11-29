@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Link from 'next/link';
+import Footer from '../components/Footer';
 
 export default function TestPage() {
   const [isRecording, setIsRecording] = useState(false);
@@ -200,92 +201,375 @@ export default function TestPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#101d22] text-white">
-      
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      background: 'linear-gradient(135deg, #0a1214 0%, #101d22 50%, #0f1a1e 100%)',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      {/* Animated Background */}
+      <div style={{
+        position: 'absolute',
+        top: '20%',
+        right: '10%',
+        width: '400px',
+        height: '400px',
+        background: 'radial-gradient(circle, rgba(54, 195, 242, 0.15) 0%, transparent 70%)',
+        borderRadius: '50%',
+        filter: 'blur(80px)',
+        animation: 'pulse 4s ease-in-out infinite',
+        pointerEvents: 'none',
+      }}></div>
+
+      {/* Header/Navigation */}
+      <header style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'rgba(16, 29, 34, 0.8)',
+        backdropFilter: 'blur(10px)',
+      }}>
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '1rem 1.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <Link href="/" style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            textDecoration: 'none',
+            transition: 'opacity 0.2s',
+          }} onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+             onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}>
+            <div style={{
+              width: '28px',
+              height: '28px',
+              color: '#36c3f2',
+            }}>
+              <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <path clipRule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor" fillRule="evenodd"/>
+              </svg>
+            </div>
+            <h2 style={{
+              fontSize: '1.25rem',
+              fontWeight: '700',
+              color: 'white',
+              margin: 0,
+            }}>Noto</h2>
+          </Link>
+          
+          <Link href="/" style={{
+            color: 'rgba(255, 255, 255, 0.7)',
+            textDecoration: 'none',
+            fontSize: '0.875rem',
+            fontWeight: '500',
+            transition: 'color 0.2s',
+          }} onMouseEnter={(e) => e.currentTarget.style.color = 'white'}
+             onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)'}>
+            ← Back to Home
+          </Link>
+        </div>
+      </header>
+
       {/* Main Content */}
-      <main className="flex flex-col items-center w-full px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-        <div className="flex flex-col items-center w-full max-w-4xl gap-16">
+      <main style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: 'clamp(2rem, 5vw, 4rem) 1.5rem',
+        position: 'relative',
+        zIndex: 1,
+      }}>
+        <div style={{
+          maxWidth: '900px',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 'clamp(2rem, 5vw, 4rem)',
+        }}>
           
           {/* Hero Section */}
-          <section className="flex flex-col items-center text-center gap-8 w-full">
-            <div className="flex flex-col gap-2">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
-                The future of music recognition.
+          <section style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            gap: '2rem',
+            width: '100%',
+          }}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.75rem',
+            }}>
+              <h1 style={{
+                fontSize: 'clamp(2rem, 6vw, 3.5rem)',
+                fontWeight: '700',
+                background: 'linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                lineHeight: '1.2',
+                margin: 0,
+              }}>
+                Identify Music Instantly
               </h1>
+              <p style={{
+                color: 'rgba(255, 255, 255, 0.6)',
+                fontSize: 'clamp(0.875rem, 2vw, 1.125rem)',
+                lineHeight: '1.6',
+                maxWidth: '600px',
+                margin: '0 auto',
+              }}>
+                Tap to record 10 seconds and discover what's playing
+              </p>
             </div>
 
             {/* Recording Button */}
-            <div className="relative flex items-center justify-center w-64 h-64 sm:w-80 sm:h-80">
-              {/* Animated rings */}
-              <div className={`absolute inset-0 rounded-full border border-[#36c3f2]/20 ${isRecording ? 'animate-pulse' : ''}`}></div>
-              <div className={`absolute inset-2 rounded-full border border-[#36c3f2]/30 ${isRecording ? 'animate-pulse' : ''}`} style={{ animationDelay: '0.2s' }}></div>
-              <div className="absolute inset-4 rounded-full bg-[#36c3f2]/10"></div>
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 'clamp(240px, 50vw, 320px)',
+              height: 'clamp(240px, 50vw, 320px)',
+            }}>
+              {/* Animated Rings */}
+              {[0, 1, 2].map((i) => (
+                <div key={i} style={{
+                  position: 'absolute',
+                  inset: `${i * 8}px`,
+                  borderRadius: '50%',
+                  border: `1px solid rgba(54, 195, 242, ${0.3 - i * 0.1})`,
+                  animation: isRecording ? `pulse ${2 + i * 0.5}s ease-in-out infinite` : 'none',
+                  animationDelay: `${i * 0.2}s`,
+                }}></div>
+              ))}
+              
+              <div style={{
+                position: 'absolute',
+                inset: '2rem',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(54, 195, 242, 0.15) 0%, transparent 70%)',
+              }}></div>
               
               {/* Main Button */}
               <button
                 onClick={isRecording ? stopRecording : startRecording}
                 disabled={isRecording || isAnalyzing}
-                className={`hover:cursor-pointer relative flex items-center justify-center rounded-full h-20 sm:h-24 px-8 bg-[#36c3f2] text-[#101d22] text-base sm:text-lg font-bold transition-all duration-300 transform ${
-                  (isRecording || isAnalyzing) ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:shadow-[0_0_15px_2px_rgba(54,195,242,0.5)]'
-                }`}
-                
+                style={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '50%',
+                  height: 'clamp(80px, 20vw, 100px)',
+                  width: 'clamp(80px, 20vw, 100px)',
+                  padding: '0 2rem',
+                  backgroundColor: (isRecording || isAnalyzing) ? 'rgba(54, 195, 242, 0.5)' : '#36c3f2',
+                  color: '#FFFFFF',
+                  fontSize: '1 rem',
+                  fontWeight: '800',
+                  border: 'none',
+                  cursor: (isRecording || isAnalyzing) ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: (isRecording || isAnalyzing) ? 'none' : '0 0 40px rgba(54, 195, 242, 0.4)',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isRecording && !isAnalyzing) {
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0 0 50px rgba(54, 195, 242, 0.6)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isRecording && !isAnalyzing) {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = '0 0 40px rgba(54, 195, 242, 0.4)';
+                  }
+                }}
               >
-                {isRecording ? `Recording... ${countdown}s` : isAnalyzing ? 'Analyzing...' : 'Tap to Identify'}
+                {isRecording ? countdown : isAnalyzing ? '...' : 'IDENTIFY'}
               </button>
             </div>
 
             {/* Status Messages */}
             {isRecording && (
-              <p className="text-[#36c3f2] text-lg animate-pulse">
-                🎤 Listening... {countdown} second{countdown !== 1 ? 's' : ''} remaining
-              </p>
+              <div style={{
+                padding: '0.75rem 1.5rem',
+                background: 'rgba(54, 195, 242, 0.1)',
+                border: '1px solid rgba(54, 195, 242, 0.3)',
+                borderRadius: '9999px',
+                color: '#36c3f2',
+                fontSize: '1rem',
+                fontWeight: '500',
+                animation: 'pulse 2s ease-in-out infinite',
+              }}>
+                🎤 Listening... {countdown}s remaining
+              </div>
             )}
 
             {isAnalyzing && !isRecording && (
-              <p className="text-[#36c3f2] text-lg animate-pulse">
+              <div style={{
+                padding: '0.75rem 1.5rem',
+                background: 'rgba(54, 195, 242, 0.1)',
+                border: '1px solid rgba(54, 195, 242, 0.3)',
+                borderRadius: '9999px',
+                color: '#36c3f2',
+                fontSize: '1rem',
+                fontWeight: '500',
+                animation: 'pulse 2s ease-in-out infinite',
+              }}>
                 🔍 Analyzing audio...
-              </p>
+              </div>
             )}
 
             {error && (
-              <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 max-w-md">
-                <p className="text-red-400">{error}</p>
+              <div style={{
+                padding: '1rem 1.5rem',
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                borderRadius: '1rem',
+                maxWidth: '500px',
+              }}>
+                <p style={{
+                  color: 'rgba(239, 68, 68, 0.9)',
+                  fontSize: '0.875rem',
+                  margin: 0,
+                }}>{error}</p>
               </div>
             )}
           </section>
 
           {/* Result Card */}
           {result && (
-            <div className="w-full max-w-lg">
-              <div className="flex flex-col gap-6 p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
+            <div style={{
+              width: '100%',
+              maxWidth: '600px',
+              animation: 'fadeInUp 0.5s ease-out',
+            }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.5rem',
+                padding: '2rem',
+                borderRadius: '1.5rem',
+                background: 'rgba(255, 255, 255, 0.05)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+              }}>
                 {result.matched ? (
                   <>
-                    <div className="flex items-center gap-4">
-                      <div className="flex-1">
-                        <p className="text-[#36c3f2] text-sm font-medium">
-                          {result.confidence.toFixed(1)}% Match
-                        </p>
-                        <p className="text-white text-2xl font-bold mt-1">
-                          {result.song.title}
-                        </p>
-                        <p className="text-white/70 text-base">
-                          {result.song.artist}
-                        </p>
-                        <p className="text-white/50 text-sm mt-2">
-                          {result.aligned_matches} matching fingerprints
-                        </p>
+                    {/* Success Header */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      paddingBottom: '1rem',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                    }}>
+                      <div style={{
+                        padding: '0.5rem',
+                        background: 'rgba(34, 197, 94, 0.2)',
+                        borderRadius: '0.5rem',
+                      }}>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M16.667 5L7.5 14.167L3.333 10" stroke="rgb(34, 197, 94)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
                       </div>
+                      <span style={{
+                        color: '#36c3f2',
+                        fontSize: '0.875rem',
+                        fontWeight: '600',
+                      }}>
+                        {result.confidence.toFixed(1)}% Match
+                      </span>
                     </div>
-                    <p className="text-[#36c3f2] text-sm">
-                      ✓ {result.message}
-                    </p>
+
+                    {/* Song Info */}
+                    <div>
+                      <h2 style={{
+                        color: 'white',
+                        fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                        fontWeight: '700',
+                        margin: '0 0 0.5rem 0',
+                        lineHeight: '1.2',
+                      }}>
+                        {result.song.title}
+                      </h2>
+                      <p style={{
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        fontSize: '1.125rem',
+                        margin: '0 0 1rem 0',
+                      }}>
+                        {result.song.artist}
+                      </p>
+                      <p style={{
+                        color: 'rgba(255, 255, 255, 0.4)',
+                        fontSize: '0.875rem',
+                        margin: 0,
+                      }}>
+                        {result.aligned_matches} matching fingerprints
+                      </p>
+                    </div>
+
+                    {/* Success Message */}
+                    <div style={{
+                      padding: '0.75rem 1rem',
+                      background: 'rgba(34, 197, 94, 0.1)',
+                      border: '1px solid rgba(34, 197, 94, 0.2)',
+                      borderRadius: '0.75rem',
+                    }}>
+                      <p style={{
+                        color: 'rgba(34, 197, 94, 0.9)',
+                        fontSize: '0.875rem',
+                        margin: 0,
+                      }}>
+                        ✓ {result.message}
+                      </p>
+                    </div>
                   </>
                 ) : (
-                  <div className="text-center py-4">
-                    <p className="text-white/70 text-lg">
+                  <div style={{
+                    textAlign: 'center',
+                    padding: '2rem 1rem',
+                  }}>
+                    <div style={{
+                      width: '64px',
+                      height: '64px',
+                      margin: '0 auto 1.5rem',
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="rgba(239, 68, 68, 0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <p style={{
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      fontSize: '1.125rem',
+                      fontWeight: '500',
+                      margin: '0 0 0.5rem 0',
+                    }}>
                       {result.message}
                     </p>
-                    <p className="text-white/50 text-sm mt-2">
+                    <p style={{
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      fontSize: '0.875rem',
+                      margin: 0,
+                    }}>
                       Try recording closer to the audio source or with less background noise.
                     </p>
                   </div>
@@ -293,8 +577,68 @@ export default function TestPage() {
               </div>
             </div>
           )}
+
+          {/* Instructions (show when idle) */}
+          {!isRecording && !isAnalyzing && !result && (
+            <div style={{
+              maxWidth: '500px',
+              padding: '2rem',
+              background: 'rgba(255, 255, 255, 0.03)',
+              borderRadius: '1.5rem',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+            }}>
+              <h3 style={{
+                color: 'white',
+                fontSize: '1.25rem',
+                fontWeight: '600',
+                marginBottom: '1rem',
+                textAlign: 'center',
+              }}>How it works</h3>
+              <ol style={{
+                color: 'rgba(255, 255, 255, 0.6)',
+                fontSize: '0.875rem',
+                lineHeight: '1.8',
+                paddingLeft: '1.25rem',
+                margin: 0,
+              }}>
+                <li style={{ marginBottom: '0.5rem' }}>Click the button to start recording</li>
+                <li style={{ marginBottom: '0.5rem' }}>Allow microphone access when prompted</li>
+                <li style={{ marginBottom: '0.5rem' }}>Play a song or hum a melody (10 seconds)</li>
+                <li>Wait for AI to identify the track</li>
+              </ol>
+            </div>
+          )}
+
         </div>
       </main>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Animations */}
+      <style jsx>{`
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.8;
+            transform: scale(1.05);
+          }
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }
