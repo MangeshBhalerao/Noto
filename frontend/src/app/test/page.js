@@ -173,9 +173,12 @@ export default function TestPage() {
       const formData = new FormData();
       formData.append('file', audioBlob, 'recording.wav');
       
-      // Send to backend
-      console.log('POST to http://localhost:8000/api/recognize');
-      const response = await fetch('http://localhost:8000/api/recognize', {
+      // Get API URL from environment variable or default to localhost
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const endpoint = `${apiUrl}/api/recognize`;
+      
+      console.log('POST to', endpoint);
+      const response = await fetch(endpoint, {
         method: 'POST',
         body: formData,
       });
