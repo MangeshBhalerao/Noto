@@ -128,18 +128,25 @@ def get_song_by_title(title: str) -> Optional[Dict]:
         release_db_connection(conn)
 
 
-def match_song_postgres(sample_hashes: Dict[str, List[int]]) -> Tuple[Optional[str], int, float]:
+def match_song_postgres(sample_hashes) -> Tuple[Optional[str], int, float]:
     """
     Match a sample against Postgres database
     
     Args:
-        sample_hashes: Dict of {hash_string: [time_offsets]} from sample
+        sample_hashes: List of (hash_string, time_offset) tuples from fingerprint_song()
         
     Returns:
         (song_title, aligned_matches, confidence)
     """
+    # Convert list of tuples to dict: {hash_string: [time_offsets]}
+    hashes_dict = {}
+    for hash_string, time_offset in sample_hashes:
+        if hash_string not in hashes_dict:
+            hashes_dict[hash_string] = []
+        hashes_dict[hash_string].append(time_offset)
+    
     # Query database for matches
-    matches = query_fingerprints(sample_hashes)
+    matches = query_fingerprints(hashes_dict)
     
     if not matches:
         return None, 0, 0.0
