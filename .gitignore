@@ -61,3 +61,5 @@ dist/
 build/
 *.egg-info/
 DEPLOYMENT.md
+
+README.md
