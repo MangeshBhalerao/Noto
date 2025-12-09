@@ -11,9 +11,11 @@ data/temp/
 data/recordings/
 songs/
 songs_backup/
+data
 
 # Database files (too large for GitHub)
 data/fingerprints/peak_db.json
+data/fingerprints/peak_db_super.json
 data/fingerprints/db.json
 *.json.bak
 
@@ -62,3 +64,5 @@ build/
 *.egg-info/
 DEPLOYMENT.md
 NotoSuper
+
+AUDIO_PROCESSING_EXPLAINED.md
