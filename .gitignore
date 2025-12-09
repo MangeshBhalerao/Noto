@@ -11,12 +11,10 @@ data/temp/
 data/recordings/
 songs/
 songs_backup/
-data
 
 # Database files (too large for GitHub)
-data/fingerprints/peak_db.json
-data/fingerprints/peak_db_super.json
-data/fingerprints/db.json
+data/fingerprints/
+data/fingerprints/*.json
 *.json.bak
 
 # Python
