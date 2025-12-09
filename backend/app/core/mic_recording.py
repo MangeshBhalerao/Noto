@@ -2,19 +2,10 @@ import sounddevice as sd
 import soundfile as sf
 import numpy as np
 
-SAMPLE_RATE = 22050  # Hz (standard for music analysis)
+SAMPLE_RATE = 22050 
 
 def record_audio(duration=10, output_file="recorded_clip.wav"):
-    """
-    Record audio from microphone
     
-    Args:
-        duration: seconds to record
-        output_file: where to save the recording
-        
-    Returns:
-        path to saved file
-    """
     print(f"🎤 Recording for {duration} seconds...")
     print("Start playing your song NOW!")
     

@@ -16,42 +16,17 @@ FINGERPRINT_REDUCTION = 15  # Keep top 15% of peaks
 PEAK_SORT = True
 FAN_VALUE = 10  # Each peak pairs with next 10 peaks
 
-def extract_fingerprint(file_path: str):
-    """Extract MFCC mean fingerprint from an audio file."""
-    y, sr = librosa.load(file_path)
-    mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
-    fingerprint = np.mean(mfccs, axis=1)
-    return fingerprint.tolist()
 
-# === NEW PEAK-BASED FINGERPRINTING ===
 
 def load_audio(file_path: str):
-    """
-    Load audio file and convert to mono with standard sample rate
     
-    Args:
-        file_path: Path to audio file
-        
-    Returns:
-        audio_data: numpy array of audio samples
-        sample_rate: sample rate
-    """
-    print(f"  Loading audio...")
+    print("Loading audio...")
     audio_data, sr = librosa.load(file_path, sr=SAMPLE_RATE, mono=True)
     return audio_data, sr
 
 def generate_spectrogram(audio_data, sr):
-    """
-    Generate spectrogram from audio data
     
-    Args:
-        audio_data: numpy array of audio samples
-        sr: sample rate
-        
-    Returns:
-        spectrogram: 2D array of frequency magnitudes over time
-    """
-    print(f"  Generating spectrogram...")
+    print("Generating spectrogram...")
     
     # Compute Short-Time Fourier Transform (STFT)
     stft = librosa.stft(audio_data, n_fft=WINDOW_SIZE, hop_length=HOP_LENGTH)
@@ -62,15 +37,7 @@ def generate_spectrogram(audio_data, sr):
     return spectrogram
 
 def find_peaks(spectrogram):
-    """
-    Find peaks (local maxima) in spectrogram
     
-    Args:
-        spectrogram: 2D array from generate_spectrogram()
-        
-    Returns:
-        peaks: list of (frequency_idx, time_idx) tuples
-    """
     print(f"  Finding peaks...")
     
     # Use simpler peak detection to avoid memory issues
@@ -102,18 +69,6 @@ def find_peaks(spectrogram):
     return peaks
 
 def generate_hashes(peaks, song_id=None):
-    """
-    Generate fingerprint hashes from peaks
-    
-    Creates hash pairs by combining an anchor peak with nearby target peaks
-    
-    Args:
-        peaks: list of (freq, time) tuples
-        song_id: identifier for the song
-        
-    Returns:
-        hashes: list of (hash_string, time_offset) tuples
-    """
     print(f"  Generating hashes...")
     
     # Sort peaks by time
@@ -149,15 +104,6 @@ def generate_hashes(peaks, song_id=None):
     return hashes
 
 def fingerprint_song(file_path):
-    """
-    Complete fingerprinting pipeline for a song
-    
-    Args:
-        file_path: path to audio file
-        
-    Returns:
-        hashes: list of (hash_string, time_offset) tuples
-    """
     # Load audio
     audio, sr = load_audio(file_path)
     
@@ -172,73 +118,10 @@ def fingerprint_song(file_path):
     
     return hashes
 
-def build_fingerprint_database(songs_folder: str, save_path: str):
-    """Loop through all .mp3 or .wav files and build fingerprint database."""
-    fingerprints = {}
-    for file in os.listdir(songs_folder):
-        if file.endswith((".wav", ".mp3")):
-            full_path = os.path.join(songs_folder, file)
-            print(f"Processing {file}...")
-            fingerprints[file] = extract_fingerprint(full_path)
 
-    with open(save_path, "w") as f:
-        json.dump(fingerprints, f)
-    print(f"✅ Fingerprints saved at {save_path}")
-
-def build_peak_database(songs_folder: str, save_path: str):
-    """
-    Build peak-based fingerprint database
-    
-    Args:
-        songs_folder: path to folder containing songs
-        save_path: where to save the database
-    """
-    print("\n🎵 Building Peak-Based Fingerprint Database")
-    print("=" * 60)
-    
-    # Database structure: hash -> [(song, offset), (song, offset), ...]
-    database = {}
-    
-    for file in os.listdir(songs_folder):
-        if file.endswith((".wav", ".mp3")):
-            full_path = os.path.join(songs_folder, file)
-            print(f"\n📀 Processing: {file}")
-            
-            # Generate hashes for this song
-            hashes = fingerprint_song(full_path)
-            
-            # Add to database
-            for hash_string, offset in hashes:
-                if hash_string not in database:
-                    database[hash_string] = []
-                
-                database[hash_string].append({
-                    "song": file,
-                    "offset": int(offset)
-                })
-    
-    # Save database
-    with open(save_path, "w") as f:
-        json.dump(database, f, indent=2)
-    
-    print("\n" + "=" * 60)
-    print(f"✅ Database saved to: {save_path}")
-    print(f"📊 Total unique hashes: {len(database)}")
-    print("=" * 60)
 
 def match_song(database_path: str, sample_path: str):
-    """
-    Match a recorded sample against the database
     
-    Args:
-        database_path: path to fingerprint database JSON
-        sample_path: path to recorded audio sample
-        
-    Returns:
-        best_match: name of matched song
-        match_count: number of matching hashes
-        confidence: confidence score
-    """
     print("\n🔍 Analyzing sample...")
     
     # Load database
