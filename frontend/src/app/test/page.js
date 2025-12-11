@@ -333,7 +333,7 @@ export default function TestPage() {
                 maxWidth: '600px',
                 margin: '0 auto',
               }}>
-                Tap to record 12 seconds and discover what's playing
+                Tap to record 12 seconds and discover what&apos;s playing
               </p>
             </div>
 
